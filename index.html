@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -227,3 +226,566 @@
     .stamps-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0 12px;
+    }
+
+    .stamp {
+      border: 2px dashed #c8b69e;
+      border-radius: 14px;
+      background: #fffdf9;
+      padding: 8px 6px 10px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .stamp-label {
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .stamp svg {
+      width: 100%;
+      max-width: 112px;
+      height: 84px;
+      display: block;
+    }
+
+    .stamp-caption {
+      margin-top: 6px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .prompt-line {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      color: var(--ink);
+    }
+
+    /* Choices */
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 9px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      min-height: 52px;
+      padding: 11px 14px;
+      border: 2px solid var(--border);
+      border-radius: 13px;
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 1rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .choice-btn:active {
+      background: var(--teal-light);
+      border-color: var(--teal);
+    }
+
+    .choice-btn.wrong {
+      background: #f5efe6;
+      border-color: #d6c8b6;
+      color: #8c98a4;
+      text-decoration: line-through;
+      pointer-events: none;
+    }
+
+    .choice-btn.correct {
+      background: var(--ok-bg);
+      border-color: var(--ok);
+      color: var(--ok);
+      animation: pop 0.35s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+
+    .feedback {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 11px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .feedback.try-again {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .feedback.solved {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    /* End Screen */
+    .winner-banner {
+      text-align: center;
+      padding: 12px;
+      border-radius: 14px;
+      background: #fff3d6;
+      border: 2px solid var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .winner-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--ink);
+      margin: 4px 0;
+    }
+
+    .final-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .final-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: #faf6f0;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <!-- START SCREEN -->
+    <section id="start-screen" class="card">
+      <svg class="hero-art" viewBox="0 0 320 130" aria-hidden="true">
+        <rect x="0" y="0" width="320" height="130" rx="16" fill="#e0f2fe" />
+        <circle cx="268" cy="34" r="18" fill="#fbbf24" />
+        <path d="M0 95 Q80 82 160 95 T320 92 L320 130 L0 130 Z" fill="#0284c7" />
+        <path d="M25 98 Q160 72 295 98" fill="none" stroke="#92400e" stroke-width="5" />
+        <line x1="65" y1="88" x2="65" y2="96" stroke="#78350f" stroke-width="3" />
+        <line x1="115" y1="82" x2="115" y2="93" stroke="#78350f" stroke-width="3" />
+        <line x1="160" y1="80" x2="160" y2="92" stroke="#78350f" stroke-width="3" />
+        <line x1="205" y1="82" x2="205" y2="93" stroke="#78350f" stroke-width="3" />
+        <line x1="255" y1="88" x2="255" y2="96" stroke="#78350f" stroke-width="3" />
+        <ellipse cx="160" cy="112" rx="95" ry="14" fill="#16a34a" />
+        <circle cx="95" cy="96" r="14" fill="#15803d" />
+        <circle cx="225" cy="96" r="14" fill="#15803d" />
+      </svg>
+      <h1>Puerto Vallarta Holiday Quest</h1>
+      <p class="subtitle">Combine two visual postcard clues each turn to race across Puerto Vallarta and reach <strong>Río Cuale</strong> first.</p>
+      <div class="rules-box">
+        <strong>How to play (3 players, 1 phone):</strong>
+        <ul>
+          <li>Pass the phone each turn: <strong>Player 1</strong>, <strong>Player 2</strong>, <strong>Player 3</strong>.</li>
+          <li>Match both clue stamps to tap the real Puerto Vallarta spot.</li>
+          <li>First player to solve 4 stops and cross the bridge to <strong>Río Cuale</strong> wins!</li>
+        </ul>
+      </div>
+      <button id="start-btn" class="btn-primary" type="button">Start Quest</button>
+    </section>
+
+    <!-- GAME SCREEN -->
+    <section id="game-screen" class="hidden">
+      <div class="card scoreboard">
+        <div class="track-header">
+          <span>Quest Progress</span>
+          <span>Goal: Río Cuale (4)</span>
+        </div>
+        <div id="lane-0" class="lane">
+          <div class="player-tag"><span class="dot" style="background: var(--p1);"></span>Player 1</div>
+          <div class="steps" id="steps-0"></div>
+          <div class="score-num" id="score-0">0/4</div>
+        </div>
+        <div id="lane-1" class="lane">
+          <div class="player-tag"><span class="dot" style="background: var(--p2);"></span>Player 2</div>
+          <div class="steps" id="steps-1"></div>
+          <div class="score-num" id="score-1">0/4</div>
+        </div>
+        <div id="lane-2" class="lane">
+          <div class="player-tag"><span class="dot" style="background: var(--p3);"></span>Player 3</div>
+          <div class="steps" id="steps-2"></div>
+          <div class="score-num" id="score-2">0/4</div>
+        </div>
+      </div>
+
+      <div id="turn-banner" class="turn-banner turn-p1" style="margin-top: 12px;">
+        <span id="turn-text">Player 1's Turn</span>
+        <span id="stage-badge" class="goal-badge">Stop 1 of 4</span>
+      </div>
+
+      <div class="card" style="margin-top: 12px;">
+        <div class="stamps-grid">
+          <div class="stamp">
+            <div class="stamp-label">Clue A • Zone</div>
+            <div id="clue-a-svg"></div>
+            <div id="clue-a-text" class="stamp-caption"></div>
+          </div>
+          <div class="stamp">
+            <div class="stamp-label">Clue B • Detail</div>
+            <div id="clue-b-svg"></div>
+            <div id="clue-b-text" class="stamp-caption"></div>
+          </div>
+        </div>
+        <p id="prompt-line" class="prompt-line">Which Puerto Vallarta landmark matches both clues?</p>
+        <div id="choices" class="choices"></div>
+        <div id="feedback" class="feedback hidden"></div>
+      </div>
+    </section>
+
+    <!-- END SCREEN -->
+    <section id="end-screen" class="card hidden">
+      <div class="winner-banner">
+        <div style="font-size: 2rem;">🌉🎉</div>
+        <div id="winner-text" class="winner-title">Player 1 Reached Río Cuale!</div>
+        <div style="font-size: 0.92rem; color: var(--muted);">Swinging bridge crossed! Great detective work.</div>
+      </div>
+      <div id="final-scores" class="final-list"></div>
+      <button id="restart-btn" class="btn-primary" type="button">Play Again (Fresh Route)</button>
+    </section>
+  </main>
+
+  <script>
+    const ZONE_SVGS = {
+      shoreline: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#e0f2fe"/><circle cx="94" cy="22" r="11" fill="#fbbf24"/><path d="M0 56 Q30 48 60 56 T120 56 L120 90 L0 90 Z" fill="#0284c7"/><rect x="0" y="68" width="120" height="22" fill="#fde68a"/></svg>`,
+      oldtown: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#ffedd5"/><polygon points="20,42 52,22 84,42" fill="#dc2626"/><rect x="26" y="42" width="52" height="34" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/><circle cx="32" cy="78" r="6" fill="#9a3412"/><circle cx="48" cy="78" r="6" fill="#9a3412"/><circle cx="64" cy="78" r="6" fill="#9a3412"/><circle cx="80" cy="78" r="6" fill="#9a3412"/></svg>`,
+      hillside: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#dcfce7"/><polygon points="0,90 48,24 96,90" fill="#16a34a"/><polygon points="46,90 88,36 120,90" fill="#15803d"/><rect x="64" y="42" width="16" height="12" fill="#ffffff"/></svg>`,
+      southcove: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#cffafe"/><path d="M0 24 Q42 28 36 58 Q32 82 0 86 Z" fill="#15803d"/><path d="M36 58 Q78 52 120 62 L120 90 L0 90 Z" fill="#0891b2"/><circle cx="84" cy="40" r="10" fill="#78716c"/></svg>`,
+      jungle: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#ecfccb"/><circle cx="32" cy="44" r="24" fill="#16a34a"/><circle cx="86" cy="40" r="26" fill="#15803d"/><circle cx="60" cy="30" r="22" fill="#22c55e"/><rect x="29" y="58" width="6" height="26" fill="#78350f"/><rect x="83" y="56" width="6" height="28" fill="#78350f"/></svg>`,
+      riverisland: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#e0f2fe"/><rect x="0" y="42" width="120" height="48" fill="#0284c7"/><ellipse cx="60" cy="64" rx="44" ry="15" fill="#16a34a"/><circle cx="44" cy="52" r="11" fill="#15803d"/><circle cx="76" cy="52" r="11" fill="#15803d"/></svg>`
+    };
+
+    const DETAIL_SVGS = {
+      seahorse: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#fef3c7"/><path d="M62 20 C76 20 78 36 64 44 C52 50 54 66 68 68 C76 68 78 60 72 57" fill="none" stroke="#92400e" stroke-width="7" stroke-linecap="round"/><circle cx="65" cy="25" r="2.5" fill="#fef3c7"/><rect x="44" y="72" width="32" height="10" rx="3" fill="#78350f"/></svg>`,
+      sailpier: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#1e1b4b"/><path d="M60 14 Q86 42 60 66 Q34 42 60 14 Z" fill="#f472b6"/><rect x="16" y="66" width="88" height="8" rx="3" fill="#cbd5e1"/></svg>`,
+      arches4: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#e0f2fe"/><path d="M12 76 L12 36 Q22 22 32 36 L32 76 M38 76 L38 36 Q48 22 58 36 L58 76 M64 76 L64 36 Q74 22 84 36 L84 76 M90 76 L90 36 Q100 22 110 36 L110 76" fill="none" stroke="#d97706" stroke-width="5"/></svg>`,
+      crown: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#ffedd5"/><rect x="34" y="54" width="52" height="24" fill="#b91c1c"/><path d="M32 54 L40 30 L52 44 L60 24 L68 44 L80 30 L88 54 Z" fill="#d97706"/><line x1="60" y1="12" x2="60" y2="24" stroke="#78350f" stroke-width="3"/><line x1="55" y1="17" x2="65" y2="17" stroke="#78350f" stroke-width="3"/></svg>`,
+      mirador: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#e0f2fe"/><rect x="36" y="56" width="48" height="24" fill="#94a3b8"/><line x1="60" y1="16" x2="60" y2="56" stroke="#1e293b" stroke-width="6"/><line x1="46" y1="28" x2="74" y2="28" stroke="#1e293b" stroke-width="6"/></svg>`,
+      rockarches: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#bae6fd"/><path d="M16 74 Q34 24 52 74 Z" fill="#57534e"/><path d="M30 74 Q34 56 38 74 Z" fill="#0284c7"/><path d="M62 74 Q82 18 104 74 Z" fill="#44403c"/><path d="M77 74 Q83 52 89 74 Z" fill="#0284c7"/><rect x="0" y="72" width="120" height="18" fill="#0284c7"/></svg>`,
+      botanical: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#dcfce7"/><ellipse cx="60" cy="46" rx="14" ry="24" fill="#ec4899"/><ellipse cx="42" cy="50" rx="18" ry="11" fill="#f472b6"/><ellipse cx="78" cy="50" rx="18" ry="11" fill="#f472b6"/><circle cx="60" cy="48" r="8" fill="#facc15"/></svg>`,
+      tilepark: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#fef9c3"/><rect x="24" y="24" width="32" height="22" rx="4" fill="#2563eb"/><rect x="64" y="24" width="32" height="22" rx="4" fill="#ea580c"/><rect x="24" y="52" width="32" height="22" rx="4" fill="#16a34a"/><rect x="64" y="52" width="32" height="22" rx="4" fill="#eab308"/></svg>`,
+      watertaxi: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#cffafe"/><polygon points="24,54 96,54 84,70 34,70" fill="#ffffff" stroke="#0284c7" stroke-width="3"/><rect x="42" y="42" width="34" height="12" fill="#0284c7"/><rect x="0" y="70" width="120" height="20" fill="#0369a1"/></svg>`,
+      ladder: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#e0f2fe"/><line x1="44" y1="18" x2="44" y2="76" stroke="#78350f" stroke-width="5"/><line x1="76" y1="18" x2="76" y2="76" stroke="#78350f" stroke-width="5"/><line x1="44" y1="30" x2="76" y2="30" stroke="#92400e" stroke-width="4"/><line x1="44" y1="45" x2="76" y2="45" stroke="#92400e" stroke-width="4"/><line x1="44" y1="60" x2="76" y2="60" stroke="#92400e" stroke-width="4"/></svg>`,
+      conchas: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#fef3c7"/><path d="M60 70 L28 38 Q60 16 92 38 Z" fill="#fb7185"/><line x1="60" y1="70" x2="44" y2="30" stroke="#fff1f2" stroke-width="2"/><line x1="60" y1="70" x2="60" y2="26" stroke="#fff1f2" stroke-width="2"/><line x1="60" y1="70" x2="76" y2="30" stroke="#fff1f2" stroke-width="2"/></svg>`,
+      bridge: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#dcfce7"/><path d="M10 38 Q60 66 110 38" fill="none" stroke="#92400e" stroke-width="5"/><path d="M10 24 Q60 52 110 24" fill="none" stroke="#78350f" stroke-width="2.5"/><line x1="30" y1="32" x2="30" y2="46" stroke="#78350f" stroke-width="2"/><line x1="60" y1="38" x2="60" y2="52" stroke="#78350f" stroke-width="2"/><line x1="90" y1="32" x2="90" y2="46" stroke="#78350f" stroke-width="2"/><rect x="0" y="68" width="120" height="22" fill="#0284c7"/></svg>`,
+      iguana: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#ecfccb"/><ellipse cx="58" cy="52" rx="24" ry="10" fill="#15803d"/><circle cx="84" cy="48" r="8" fill="#16a34a"/><path d="M34 52 Q16 54 12 44" fill="none" stroke="#15803d" stroke-width="5" stroke-linecap="round"/><polygon points="48,42 52,34 56,42 60,34 64,42 68,34 72,42" fill="#65a30d"/></svg>`,
+      markets: `<svg viewBox="0 0 120 90"><rect width="120" height="90" rx="10" fill="#ffedd5"/><path d="M22 36 L98 36 L104 50 L16 50 Z" fill="#dc2626"/><rect x="24" y="50" width="72" height="28" fill="#fff7ed" stroke="#d97706" stroke-width="2"/><circle cx="44" cy="64" r="7" fill="#f59e0b"/><circle cx="60" cy="64" r="7" fill="#16a34a"/><circle cx="76" cy="64" r="7" fill="#ef4444"/></svg>`
+    };
+
+    const STOP_PUZZLES = [
+      {
+        zoneSvg: ZONE_SVGS.shoreline,
+        zoneText: "Beachfront Boardwalk",
+        detailSvg: DETAIL_SVGS.seahorse,
+        detailText: "Bronze Seahorse Statue",
+        answer: "El Malecón",
+        options: ["El Malecón", "Playa Camarones", "Marina Vallarta", "Los Muertos Pier"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.shoreline,
+        zoneText: "Zona Romántica Shore",
+        detailSvg: DETAIL_SVGS.sailpier,
+        detailText: "Glowing Sail Pier",
+        answer: "Los Muertos Pier",
+        options: ["Los Muertos Pier", "El Malecón", "Boca de Tomatlán", "Conchas Chinas"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.shoreline,
+        zoneText: "Centro Waterfront",
+        detailSvg: DETAIL_SVGS.arches4,
+        detailText: "4 Open Stone Arches",
+        answer: "Los Arcos Amphitheater",
+        options: ["Los Arcos Amphitheater", "Los Arcos Marine Park", "Parroquia de Guadalupe", "Plaza Lazaro Cárdenas"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.oldtown,
+        zoneText: "Centro Cobblestones",
+        detailSvg: DETAIL_SVGS.crown,
+        detailText: "Red Brick Crown Tower",
+        answer: "Parroquia de Guadalupe",
+        options: ["Parroquia de Guadalupe", "Mirador Cerro de la Cruz", "Los Arcos Amphitheater", "Zona Romántica"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.hillside,
+        zoneText: "Steep Stairway Hill",
+        detailSvg: DETAIL_SVGS.mirador,
+        detailText: "350 Steps & Lookout Cross",
+        answer: "Mirador Cerro de la Cruz",
+        options: ["Mirador Cerro de la Cruz", "Parroquia de Guadalupe", "Conchas Chinas", "Vallarta Botanical Gardens"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.southcove,
+        zoneText: "South Bay Sea Cliffs",
+        detailSvg: DETAIL_SVGS.rockarches,
+        detailText: "Granite Sea Arch Islands",
+        answer: "Los Arcos Marine Park",
+        options: ["Los Arcos Marine Park", "Los Arcos Amphitheater", "Conchas Chinas", "Playa Camarones"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.jungle,
+        zoneText: "Southern Mountain Forest",
+        detailSvg: DETAIL_SVGS.botanical,
+        detailText: "Orchid Conservatory",
+        answer: "Vallarta Botanical Gardens",
+        options: ["Vallarta Botanical Gardens", "Boca de Tomatlán", "Mirador Cerro de la Cruz", "Plaza Lazaro Cárdenas"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.oldtown,
+        zoneText: "Old Town Plaza",
+        detailSvg: DETAIL_SVGS.tilepark,
+        detailText: "Colorful Mosaic Tile Benches",
+        answer: "Plaza Lázaro Cárdenas",
+        options: ["Plaza Lázaro Cárdenas", "Los Muertos Pier", "El Malecón", "Marina Vallarta"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.southcove,
+        zoneText: "Southern River Mouth",
+        detailSvg: DETAIL_SVGS.watertaxi,
+        detailText: "Panga Water Taxi Dock",
+        answer: "Boca de Tomatlán",
+        options: ["Boca de Tomatlán", "Los Muertos Pier", "Playa Camarones", "Los Arcos Marine Park"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.shoreline,
+        zoneText: "North Hotel Zone Beach",
+        detailSvg: DETAIL_SVGS.ladder,
+        detailText: "Wooden Beach Ladder",
+        answer: "Playa Camarones",
+        options: ["Playa Camarones", "Conchas Chinas", "El Malecón", "Boca de Tomatlán"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.southcove,
+        zoneText: "Rocky Tidal Pools",
+        detailSvg: DETAIL_SVGS.conchas,
+        detailText: "Curved Sea Shell Cove",
+        answer: "Conchas Chinas",
+        options: ["Conchas Chinas", "Playa Camarones", "Los Arcos Marine Park", "Los Muertos Pier"]
+      }
+    ];
+
+    const FINALE_PUZZLES = [
+      {
+        zoneSvg: ZONE_SVGS.riverisland,
+        zoneText: "Shaded River Island",
+        detailSvg: DETAIL_SVGS.bridge,
+        detailText: "Wooden Swinging Bridge",
+        answer: "Río Cuale",
+        options: ["Río Cuale", "Boca de Tomatlán", "Los Muertos Pier", "Vallarta Botanical Gardens"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.riverisland,
+        zoneText: "Split Riverbank Park",
+        detailSvg: DETAIL_SVGS.iguana,
+        detailText: "Sunbathing Tree Iguanas",
+        answer: "Río Cuale",
+        options: ["Río Cuale", "Vallarta Botanical Gardens", "Plaza Lázaro Cárdenas", "Conchas Chinas"]
+      },
+      {
+        zoneSvg: ZONE_SVGS.riverisland,
+        zoneText: "Island Between Two Bridges",
+        detailSvg: DETAIL_SVGS.markets,
+        detailText: "Artisan Craft Market Stalls",
+        answer: "Río Cuale",
+        options: ["Río Cuale", "El Malecón", "Parroquia de Guadalupe", "Playa Camarones"]
+      }
+    ];
+
+    let scores = [0, 0, 0];
+    let currentPlayer = 0;
+    let deck = [];
+    let currentPuzzle = null;
+    let locked = false;
+
+    const startScreen = document.getElementById("start-screen");
+    const gameScreen = document.getElementById("game-screen");
+    const endScreen = document.getElementById("end-screen");
+    const startBtn = document.getElementById("start-btn");
+    const restartBtn = document.getElementById("restart-btn");
+    const turnBanner = document.getElementById("turn-banner");
+    const turnText = document.getElementById("turn-text");
+    const stageBadge = document.getElementById("stage-badge");
+    const clueASvg = document.getElementById("clue-a-svg");
+    const clueAText = document.getElementById("clue-a-text");
+    const clueBSvg = document.getElementById("clue-b-svg");
+    const clueBText = document.getElementById("clue-b-text");
+    const promptLine = document.getElementById("prompt-line");
+    const choicesEl = document.getElementById("choices");
+    const feedbackEl = document.getElementById("feedback");
+
+    function shuffle(arr) {
+      const copy = arr.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function startGame() {
+      scores = [0, 0, 0];
+      currentPlayer = 0;
+      deck = shuffle(STOP_PUZZLES);
+      locked = false;
+
+      startScreen.classList.add("hidden");
+      endScreen.classList.add("hidden");
+      gameScreen.classList.remove("hidden");
+
+      renderScoreboard();
+      loadTurn();
+    }
+
+    function renderScoreboard() {
+      for (let p = 0; p < 3; p++) {
+        const lane = document.getElementById(`lane-${p}`);
+        const stepsContainer = document.getElementById(`steps-${p}`);
+        const scoreNum = document.getElementById(`score-${p}`);
+
+        lane.classList.toggle("active-turn", p === currentPlayer);
+        scoreNum.textContent = `${scores[p]}/4`;
+
+        stepsContainer.innerHTML = "";
+        for (let s = 0; s < 4; s++) {
+          const stepDiv = document.createElement("div");
+          stepDiv.className = "step";
+          if (s < scores[p]) {
+            stepDiv.classList.add(`filled-${p + 1}`);
+          }
+          stepsContainer.appendChild(stepDiv);
+        }
+      }
+    }
+
+    function loadTurn() {
+      locked = false;
+      feedbackEl.classList.add("hidden");
+      feedbackEl.textContent = "";
+
+      const playerNum = currentPlayer + 1;
+      const stepNum = scores[currentPlayer] + 1;
+      const isFinale = scores[currentPlayer] === 3;
+
+      turnBanner.className = `turn-banner turn-p${playerNum}`;
+      turnText.textContent = `Player ${playerNum}'s Turn`;
+      stageBadge.textContent = isFinale ? "FINAL STOP (4 of 4)" : `Stop ${stepNum} of 4`;
+
+      if (isFinale) {
+        currentPuzzle = FINALE_PUZZLES[Math.floor(Math.random() * FINALE_PUZZLES.length)];
+        promptLine.textContent = "Final stretch! Which spot finishes your quest?";
+      } else {
+        if (deck.length === 0) {
+          deck = shuffle(STOP_PUZZLES);
+        }
+        currentPuzzle = deck.pop();
+        promptLine.textContent = "Which landmark matches both clues?";
+      }
+
+      clueASvg.innerHTML = currentPuzzle.zoneSvg;
+      clueAText.textContent = currentPuzzle.zoneText;
+      clueBSvg.innerHTML = currentPuzzle.detailSvg;
+      clueBText.textContent = currentPuzzle.detailText;
+
+      choicesEl.innerHTML = "";
+      const shuffledOptions = shuffle(currentPuzzle.options);
+      shuffledOptions.forEach((optionText) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "choice-btn";
+        btn.innerHTML = `<span>${optionText}</span><span>→</span>`;
+        btn.addEventListener("click", () => handleChoice(btn, optionText));
+        choicesEl.appendChild(btn);
+      });
+
+      renderScoreboard();
+    }
+
+    function handleChoice(btn, chosen) {
+      if (locked) return;
+
+      if (chosen === currentPuzzle.answer) {
+        locked = true;
+        btn.classList.add("correct");
+        btn.innerHTML = `<span>${chosen}</span><span>✓</span>`;
+        scores[currentPlayer] += 1;
+        renderScoreboard();
+
+        if (scores[currentPlayer] >= 4) {
+          feedbackEl.className = "feedback solved";
+          feedbackEl.textContent = `Player ${currentPlayer + 1} found Río Cuale and wins!`;
+          feedbackEl.classList.remove("hidden");
+          setTimeout(showEndScreen, 1100);
+        } else {
+          const nextPlayer = ((currentPlayer + 1) % 3) + 1;
+          feedbackEl.className = "feedback solved";
+          feedbackEl.textContent = `Spot on! Step ${scores[currentPlayer]} complete. Pass to Player ${nextPlayer}...`;
+          feedbackEl.classList.remove("hidden");
+          setTimeout(() => {
+            currentPlayer = (currentPlayer + 1) % 3;
+            loadTurn();
+          }, 1150);
+        }
+      } else {
+        btn.classList.add("wrong");
+        btn.innerHTML = `<span>${chosen}</span><span>✕</span>`;
+        feedbackEl.className = "feedback try-again";
+        feedbackEl.textContent = "Not quite—check both clues and try again!";
+        feedbackEl.classList.remove("hidden");
+      }
+    }
+
+    function showEndScreen() {
+      gameScreen.classList.add("hidden");
+      endScreen.classList.remove("hidden");
+
+      const winnerNum = currentPlayer + 1;
+      document.getElementById("winner-text").textContent = `Player ${winnerNum} Reached Río Cuale!`;
+
+      const finalScoresEl = document.getElementById("final-scores");
+      finalScoresEl.innerHTML = "";
+      const colors = ["var(--p1)", "var(--p2)", "var(--p3)"];
+
+      for (let p = 0; p < 3; p++) {
+        const row = document.createElement("div");
+        row.className = "final-row";
+        const badge = p === currentPlayer ? "🏆 Winner" : `${scores[p]} / 4 stops`;
+        row.innerHTML = `
+          <span style="display:flex;align-items:center;gap:8px;">
+            <span class="dot" style="background:${colors[p]};"></span>
+            Player ${p + 1}
+          </span>
+          <span>${badge}</span>
+        `;
+        finalScoresEl.appendChild(row);
+      }
+    }
+
+    startBtn.addEventListener("click", startGame);
+    restartBtn.addEventListener("click", startGame);
+  </script>
+</body>
+</html>
